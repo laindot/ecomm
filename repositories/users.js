@@ -51,6 +51,33 @@ class usersRepository {
     const filteredRecords = records.filter((record) => record.Id !== Id);
     await this.writeAll(filteredRecords);
   }
+
+  async update(Id, atrs) {
+    const records = await this.getAll();
+    const record = records.find((record) => record.Id === Id);
+
+    if (!record) {
+      throw new Error(`Record with Id ${Id} does not exist`);
+    }
+    Object.assign(record, atrs);
+    await this.writeAll(records);
+  }
+
+  async getOneBy(filters) {
+    const records = await this.getAll();
+    for (let record of records) {
+      let found = true;
+
+      for (let key in filters) {
+        if (record[key] !== filters[key]) {
+          found = false;
+        }
+      }
+      if (found) {
+        return record;
+      }
+    }
+  }
 }
 
 // nota: usamos versiones sincronas de los metodos porque dentro del constructor
@@ -61,7 +88,7 @@ class usersRepository {
 const test = async () => {
   const repo = new usersRepository('users.json');
 
-  await repo.delete('127c69ba');
+  console.log(await repo.getOneBy({ password: 'mypassword' }));
 
   // console.log(user);
 };
