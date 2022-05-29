@@ -1,4 +1,5 @@
 const fs = require('fs');
+const crypto = require('crypto');
 
 class usersRepository {
   constructor(filename) {
@@ -23,6 +24,7 @@ class usersRepository {
     ); // preferible trabajar con promesas a medida de lo posible
   }
   async create(atrs) {
+    atrs.Id = this.randomId();
     const records = await this.getAll();
     records.push(atrs);
     await this.writeAll(records);
@@ -34,6 +36,9 @@ class usersRepository {
       this.filename,
       JSON.stringify(records, null, 2)
     );
+  }
+  randomId() {
+    return crypto.randomBytes(4).toString('hex');
   }
 }
 
