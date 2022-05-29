@@ -40,6 +40,17 @@ class usersRepository {
   randomId() {
     return crypto.randomBytes(4).toString('hex');
   }
+
+  async getOne(Id) {
+    const records = await this.getAll();
+    return records.find((record) => record.Id === Id);
+  }
+
+  async delete(Id) {
+    const records = await this.getAll();
+    const filteredRecords = records.filter((record) => record.Id !== Id);
+    await this.writeAll(filteredRecords);
+  }
 }
 
 // nota: usamos versiones sincronas de los metodos porque dentro del constructor
@@ -49,9 +60,10 @@ class usersRepository {
 
 const test = async () => {
   const repo = new usersRepository('users.json');
-  await repo.create({ email: 'test@test.com', password: '123456' });
-  const users = await repo.getAll();
-  console.log(users);
+
+  await repo.delete('127c69ba');
+
+  // console.log(user);
 };
 
 test();
