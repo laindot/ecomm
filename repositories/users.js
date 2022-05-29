@@ -85,12 +85,4 @@ class usersRepository {
 // esta clase se va instanciar una sola vez en el flujo de la aplicacion
 // asi que no afecta el rendimiendo de manera significativa
 
-const test = async () => {
-  const repo = new usersRepository('users.json');
-
-  console.log(await repo.getOneBy({ password: 'mypassword' }));
-
-  // console.log(user);
-};
-
-test();
+module.exports = new usersRepository('users.json');
