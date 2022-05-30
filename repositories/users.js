@@ -28,6 +28,8 @@ class usersRepository {
     const records = await this.getAll();
     records.push(atrs);
     await this.writeAll(records);
+
+    return atrs;
   }
 
   // escribir el archivo (filename) con el nuevo registro (records)
