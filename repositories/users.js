@@ -44,6 +44,13 @@ class usersRepository {
     return record;
   }
 
+  async comparePasswords(saved, supplied) {
+    const [hashed, salt] = saved.split('.');
+    const hashedSuppliedBuf = await scrypt(supplied, salt, 64);
+
+    return hashed === hashedSuppliedBuf.toString('hex');
+  }
+
   // escribir el archivo (filename) con el nuevo registro (records)
   async writeAll(records) {
     await fs.promises.writeFile(
