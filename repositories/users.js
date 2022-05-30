@@ -1,5 +1,8 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const util = require('util');
+
+const scrypt = util.promisify(crypto.scrypt);
 
 class usersRepository {
   constructor(filename) {
@@ -25,11 +28,20 @@ class usersRepository {
   }
   async create(atrs) {
     atrs.Id = this.randomId();
+
+    const salt = crypto.randomBytes(8).toString('hex');
+    const buf = await scrypt(atrs.password, salt, 64);
+
     const records = await this.getAll();
-    records.push(atrs);
+    const record = {
+      ...atrs,
+      password: `${buf.toString('hex')}.${salt}`,
+    };
+    records.push(record);
+
     await this.writeAll(records);
 
-    return atrs;
+    return record;
   }
 
   // escribir el archivo (filename) con el nuevo registro (records)
