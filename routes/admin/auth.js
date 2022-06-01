@@ -30,7 +30,7 @@ router.post(
 
     // guardar el Id del usuario en un cookie
     req.session.userId = user.Id; // propiedad que viene de cookie session
-    res.send('account created');
+    res.redirect('/admin/products');
   }
 );
 
@@ -53,7 +53,7 @@ router.post(
     const user = await usersRepo.getOneBy({ email });
 
     req.session.userId = user.Id;
-    res.send('you are logged in');
+    res.redirect('/admin/products');
   }
 );
 
